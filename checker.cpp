@@ -32,7 +32,6 @@ int main(int argc, char **argv) {
       &data[(elf_shdr_base + elf_header->e_shstrndx)->sh_offset];
 
   // Find .main_function_section
-  // TODO Instead do this for the whole first loadable section
   int function_section_index{};
   for (auto i = 0; i < elf_header->e_shnum; ++i) {
     std::string current_section_name =
@@ -44,7 +43,7 @@ int main(int argc, char **argv) {
     }
   }
 
-  // Find function size
+  // Find function CRC target
   int *main_function_size = nullptr;
   for (auto i = 0; i < elf_header->e_shnum; ++i) {
     std::string current_section_name =
@@ -57,7 +56,7 @@ int main(int argc, char **argv) {
     }
   }
 
-  // Calculate CRC value
+  // Calculate CRC value and populate it in the file
   int total = 0;
   for (auto i = 0; i < (elf_shdr_base+function_section_index)->sh_size; ++i)
   {
@@ -66,6 +65,7 @@ int main(int argc, char **argv) {
   std::cout << total << std::endl;
   *main_function_size = total;
 
+  // Write results back out
   std::ofstream output_file("/tmp/final.bin", std::ios::binary | std::ios::out);
   output_file.write(data.data(), data.size());
   output_file.close();
