@@ -58,9 +58,8 @@ int main(int argc, char **argv) {
 
   // Calculate CRC value and populate it in the file
   int total = 0;
-  for (auto i = 0; i < (elf_shdr_base+function_section_index)->sh_size; ++i)
-  {
-    total += abs(data[(elf_shdr_base+function_section_index)->sh_offset + i]);
+  for (auto i = 0; i < (elf_shdr_base + function_section_index)->sh_size; ++i) {
+    total += abs(data[(elf_shdr_base + function_section_index)->sh_offset + i]);
   }
   std::cout << total << std::endl;
   *main_function_size = total;
