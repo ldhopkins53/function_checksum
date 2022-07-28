@@ -57,5 +57,18 @@ int main(int argc, char **argv) {
     }
   }
 
+  // Calculate CRC value
+  int total = 0;
+  for (auto i = 0; i < (elf_shdr_base+function_section_index)->sh_size; ++i)
+  {
+    total += abs(data[(elf_shdr_base+function_section_index)->sh_offset + i]);
+  }
+  std::cout << total << std::endl;
+  *main_function_size = total;
+
+  std::ofstream output_file("/tmp/final.bin", std::ios::binary | std::ios::out);
+  output_file.write(data.data(), data.size());
+  output_file.close();
+
   return EXIT_SUCCESS;
 }
